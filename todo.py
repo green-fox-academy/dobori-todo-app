@@ -13,7 +13,7 @@ class Todo_controller(object):
         elif len(sys.argv) == 2 and sys.argv[1] == "-a":
             return self.add_todo()
         elif len(sys.argv) == 2 and sys.argv[1] == "-r":
-            print("removeolj")
+            return self.delete_line()
         elif len(sys.argv) == 2 and sys.argv[1] == "-c":
             print("check")
         elif len(sys.argv) == 1:
@@ -28,8 +28,17 @@ class Todo_controller(object):
 
     def todo_list_read(self):
         self.todo_elements = open("todo_list.txt", "r")
-        todo_list = self.todo_elements.read()
-        print(todo_list)
+        i = 0
+        for line in self.todo_elements.readlines():
+            i += 1
+            splitted_line = line.split() 
+            if splitted_line[0] == "0":
+                splitted_line[0] = "[ ]"
+            else:
+                splitted_line[0] = "[X]"
+            newline = " ".join(splitted_line)
+            print(str(i) + " - " + newline)
+
         self.todo_elements.close()
 
 
@@ -39,7 +48,20 @@ class Todo_controller(object):
         self.textfile.write("0 " + todo_input + "\n")
         self.textfile.close()
 
+    def delete_line(self):
+        delete_input = input("Please write which line do you want to remove: ")
+        self.textfile = open("todo_list.txt", "r")
+        lines = self.textfile.readlines()
+        self.textfile.close()
 
+        for i in range(len(lines)):
+            if i == int(delete_input)-1:
+                del lines[int(delete_input)-1]
+            newlines = "".join(lines)
+        self.textfile = open("todo_list.txt", "w")
+        self.textfile.write(newlines)
+        self.textfile.close()
+        
 
 
 
